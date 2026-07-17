@@ -1,0 +1,302 @@
+<div class="space-y-6">
+  <!-- Barra superior -->
+  <div class="flex items-center justify-between">
+    <button class="btn-secondary" (click)="volver()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15 19l-7-7 7-7"
+        />
+      </svg>
+      Volver
+    </button>
+    <h2 class="text-xl font-bold text-slate-900" *ngIf="sucursal">
+      Detalle de sucursal
+    </h2>
+  </div>
+
+  <!-- Mensajes -->
+  <div
+    *ngIf="successMsg"
+    class="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"
+  >
+    {{ successMsg }}
+  </div>
+  <div
+    *ngIf="error"
+    class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+  >
+    {{ error }}
+  </div>
+
+  <!-- Loading -->
+  <div
+    *ngIf="loading"
+    class="flex flex-col items-center justify-center gap-3 py-16 text-slate-500"
+  >
+    <svg
+      class="h-8 w-8 animate-spin text-primary-800"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      ></circle>
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      ></path>
+    </svg>
+    <span class="text-sm">Cargando sucursal...</span>
+  </div>
+
+  <ng-container *ngIf="!loading && sucursal">
+    <!-- Formulario de sucursal -->
+    <div class="card p-6">
+      <h3 class="mb-4 text-lg font-semibold text-slate-900">
+        Información de la sucursal
+      </h3>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div>
+          <label class="mb-1 block text-sm font-medium text-slate-700"
+            >Nombre</label
+          >
+          <input class="input-field" [(ngModel)]="form.nombre" />
+        </div>
+        <div>
+          <label class="mb-1 block text-sm font-medium text-slate-700"
+            >Dirección</label
+          >
+          <input class="input-field" [(ngModel)]="form.direccion" />
+        </div>
+        <div>
+          <label class="mb-1 block text-sm font-medium text-slate-700"
+            >Teléfono</label
+          >
+          <input class="input-field" [(ngModel)]="form.telefono" />
+        </div>
+      </div>
+      <div class="mt-5 flex justify-end">
+        <button
+          class="btn-primary"
+          (click)="guardarSucursal()"
+          [disabled]="savingSucursal"
+        >
+          {{ savingSucursal ? "Guardando..." : "Guardar cambios" }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Colaboradores -->
+    <div class="card overflow-hidden">
+      <div
+        class="flex items-center justify-between border-b border-slate-100 px-6 py-4"
+      >
+        <h3 class="text-lg font-semibold text-slate-900">Colaboradores</h3>
+        <button class="btn-primary !px-3 !py-1.5" (click)="abrirNuevoColaborador()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Agregar colaborador
+        </button>
+      </div>
+
+      <!-- Estado vacío -->
+      <div
+        *ngIf="sucursal.colaboradores.length === 0"
+        class="flex flex-col items-center justify-center gap-3 py-12 text-center text-slate-500"
+      >
+        <span
+          class="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-slate-400"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
+            />
+          </svg>
+        </span>
+        <p class="text-sm">
+          Esta sucursal no tiene colaboradores. Agrega el primero.
+        </p>
+      </div>
+
+      <!-- Tabla de colaboradores -->
+      <div *ngIf="sucursal.colaboradores.length > 0" class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200 text-left">
+          <thead class="bg-primary-800 text-white">
+            <tr>
+              <th class="px-4 py-3 text-sm font-semibold">Nombre</th>
+              <th class="px-4 py-3 text-sm font-semibold">CUI</th>
+              <th class="px-4 py-3 text-right text-sm font-semibold">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr
+              *ngFor="let c of sucursal.colaboradores"
+              class="transition-colors hover:bg-slate-50"
+            >
+              <td class="px-4 py-3 text-sm font-medium text-slate-900">
+                {{ c.nombre }}
+              </td>
+              <td class="px-4 py-3 text-sm text-slate-600">{{ c.cui }}</td>
+              <td class="px-4 py-3">
+                <div class="flex justify-end gap-2">
+                  <button
+                    class="btn-primary !px-3 !py-1.5"
+                    (click)="abrirEditarColaborador(c)"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    class="btn-danger !px-3 !py-1.5"
+                    (click)="confirmarEliminarColaborador(c)"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<!-- Modal agregar/editar colaborador -->
+<div
+  *ngIf="showColaboradorModal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fadeIn"
+  (click)="cerrarModal()"
+>
+  <div
+    class="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl animate-scaleIn"
+    (click)="$event.stopPropagation()"
+  >
+    <h3 class="text-lg font-semibold text-slate-900">
+      {{ colaboradorEnEdicion ? "Editar colaborador" : "Agregar colaborador" }}
+    </h3>
+    <div class="mt-4 space-y-4">
+      <div>
+        <label class="mb-1 block text-sm font-medium text-slate-700"
+          >Nombre</label
+        >
+        <input
+          class="input-field"
+          [(ngModel)]="colaboradorForm.nombre"
+          placeholder="Nombre completo"
+        />
+      </div>
+      <div>
+        <label class="mb-1 block text-sm font-medium text-slate-700">CUI</label>
+        <input
+          class="input-field"
+          [(ngModel)]="colaboradorForm.cui"
+          placeholder="Número de CUI"
+        />
+      </div>
+    </div>
+    <div class="mt-6 flex justify-end gap-3">
+      <button class="btn-secondary" (click)="cerrarModal()">Cancelar</button>
+      <button
+        class="btn-primary"
+        (click)="guardarColaborador()"
+        [disabled]="savingColaborador"
+      >
+        {{ savingColaborador ? "Guardando..." : "Guardar" }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal confirmar eliminación de colaborador -->
+<div
+  *ngIf="colaboradorAEliminar"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fadeIn"
+  (click)="cancelarEliminarColaborador()"
+>
+  <div
+    class="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl animate-scaleIn"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="flex items-start gap-4">
+      <span
+        class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 9v3.75m0 3.75h.008M10.34 3.94l-8.4 14.55A1.5 1.5 0 003.24 21h17.52a1.5 1.5 0 001.3-2.51L13.66 3.94a1.5 1.5 0 00-2.6 0z"
+          />
+        </svg>
+      </span>
+      <div>
+        <h3 class="text-lg font-semibold text-slate-900">
+          Eliminar colaborador
+        </h3>
+        <p class="mt-1 text-sm text-slate-500">
+          ¿Seguro que deseas eliminar a
+          <span class="font-semibold">{{ colaboradorAEliminar.nombre }}</span
+          >? Esta acción no se puede deshacer.
+        </p>
+      </div>
+    </div>
+    <div class="mt-6 flex justify-end gap-3">
+      <button class="btn-secondary" (click)="cancelarEliminarColaborador()">
+        Cancelar
+      </button>
+      <button
+        class="btn-danger"
+        (click)="eliminarColaborador()"
+        [disabled]="deletingColaborador"
+      >
+        {{ deletingColaborador ? "Eliminando..." : "Eliminar" }}
+      </button>
+    </div>
+  </div>
+</div>

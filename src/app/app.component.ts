@@ -1,0 +1,48 @@
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet, RouterLink],
+  template: `
+    <div class="min-h-screen bg-slate-50">
+      <header class="bg-primary-800 text-white shadow-md">
+        <div
+          class="mx-auto flex max-w-6xl items-center gap-3 px-4 py-4 sm:px-6"
+        >
+          <a routerLink="/" class="flex items-center gap-3">
+            <span
+              class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/30"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M15 9h.01M9 13h.01M15 13h.01M9 17h.01M15 17h.01"
+                />
+              </svg>
+            </span>
+            <div>
+              <h1 class="text-lg font-bold leading-tight sm:text-xl">
+                DAS Global
+              </h1>
+              <p class="text-xs text-blue-100">Gestión de Sucursales</p>
+            </div>
+          </a>
+        </div>
+      </header>
+      <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  `,
+})
+export class AppComponent {}
