@@ -5,7 +5,8 @@ import { Sucursal, Colaborador } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private readonly baseUrl = 'http://localhost:3000/api';
+  // private readonly baseUrl = 'http://localhost:3000/api'; //consumo api localhost
+  private readonly baseUrl = 'https://backend-das-global.vercel.app/api';
 
   constructor(private http: HttpClient) {}
 
