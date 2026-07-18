@@ -13,22 +13,9 @@ import { RouterOutlet, RouterLink } from '@angular/router';
         >
           <a routerLink="/" class="flex items-center gap-3">
             <span
-              class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/30"
+              class="flex h-10 w-10 items-center justify-center rounded-xl bg-white ring-1 ring-white/30"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="1.8"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M15 9h.01M9 13h.01M15 13h.01M9 17h.01M15 17h.01"
-                />
-              </svg>
+            <img class="w-7 h-7" src="../assets/das_global.jpg" alt="logo das global">
             </span>
             <div>
               <h1 class="text-lg font-bold leading-tight sm:text-xl">
